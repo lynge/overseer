@@ -21,7 +21,6 @@ public class Trigger
 			regExp.append("(" + entry.getRegExp() + ")");
 			or = "|";
 		}
-		System.out.println("compiling pattern: "+regExp.toString());
 		pattern = Pattern.compile(regExp.toString());
 	}
 
@@ -30,11 +29,9 @@ public class Trigger
 		Matcher matcher = pattern.matcher(lookupString);
 		if (matcher.matches())
 		{
-			System.out.println("match!");
 			for (int i = 0; i < matcher.groupCount(); i++)
 			{
-				System.out.println(matcher.group(i));
-				if (matcher.group(i) != null)
+				if (matcher.group(i+1) != null)
 				{
 					entries.get(i).getHandler().handle();
 				}
