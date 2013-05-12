@@ -1,18 +1,27 @@
 package matcher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TriggerBuilder
 {
 
+	private List<TriggerEntry> entries = new ArrayList<TriggerEntry>();
+
 	public Trigger build()
 	{
-		return new Trigger()
-		{
+		Trigger trigger = new Trigger(entries);
+		return trigger;
+	}
 
-			@Override
-			public void trigger(String string)
-			{
-			}
-		};
+	public TriggerBuilder addEntry(TriggerEntry triggerEntry)
+	{
+		if (triggerEntry == null)
+		{
+			return this;
+		}
+		entries.add(triggerEntry);
+		return this;
 	}
 
 }
