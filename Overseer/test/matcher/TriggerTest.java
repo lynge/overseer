@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TriggerBuilderTest
+public class TriggerTest
 {
 	
 	@Test
@@ -59,6 +59,30 @@ public class TriggerBuilderTest
 		Trigger trigger = new TriggerBuilder().addEntry(triggerEntry).addEntry(triggerEntry2).build();
 		trigger.trigger(regexp2);
 		Assert.assertTrue("Handler was not invoked", handlerIsInvoked.get());
+	}
+
+	@Test
+	public void addTwoTriggerEntriesWhichMatchSameInput() {
+		final AtomicBoolean handlerIsInvoked = new AtomicBoolean(false);
+		String regexp = "aa*";
+		TriggerHandler handler = new TriggerHandler() {
+			@Override
+			public void handle() {
+				handlerIsInvoked.set(true);
+			}
+		};
+		TriggerEntry triggerEntry = new TriggerEntry(regexp, handler);
+		String regexp2 = "a*";
+		TriggerHandler handler2 = new TriggerHandler() {
+			@Override
+			public void handle() {
+				Assert.fail("Handler 2 was invoked. This is unexpected as handler 1 should match the input.");
+			}
+		};
+		TriggerEntry triggerEntry2 = new TriggerEntry(regexp2, handler2);
+		Trigger trigger = new TriggerBuilder().addEntry(triggerEntry).addEntry(triggerEntry2).build();
+		trigger.trigger("aaaa");
+		Assert.assertTrue("Both handlers was not invoked", handlerIsInvoked.get());
 	}
 
 }
